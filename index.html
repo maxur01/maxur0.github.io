@@ -310,9 +310,9 @@
                         <span id="discord-tooltip" class="absolute bottom-full mb-2 bg-black border border-[#DFFF00]/30 text-[#DFFF00] text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none tracking-widest uppercase">Copy ID</span>
                     </div>
 
-                    <!-- Github -->
-                    <a href="#" target="_blank" class="group relative flex items-center justify-center aspect-square rounded-xl bg-white/5 border border-white/5 hover:bg-[#DFFF00]/10 hover:border-[#DFFF00]/50 hover:scale-105 transition-all duration-300 cursor-pointer shadow-lg hover:shadow-[#DFFF00]/10">
-                        <i class="fab fa-github text-xl text-gray-300 group-hover:text-[#DFFF00] transition-colors"></i>
+                    <!-- Spotify -->
+                    <a href="https://open.spotify.com/user/fccebyniu5dj1q9t4h4vhg2jk?si=8f540360e7b5418c" target="_blank" class="group relative flex items-center justify-center aspect-square rounded-xl bg-white/5 border border-white/5 hover:bg-[#1DB954]/20 hover:border-[#1DB954]/50 hover:scale-105 transition-all duration-300 cursor-pointer shadow-lg hover:shadow-[#1DB954]/20">
+                        <i class="fab fa-spotify text-xl text-gray-300 group-hover:text-[#1DB954] transition-colors"></i>
                     </a>
 
                 </div>
@@ -488,10 +488,13 @@
             overlay.style.opacity = '0';
             overlay.style.pointerEvents = 'none';
 
-            if(audio.getAttribute('src')) {
-                audio.volume = 0.2; 
-                audio.play().catch(() => {});
-            }
+            // Fixed audio logic: removed the check that was failing
+            // START FROM 0:40
+            audio.currentTime = 40; 
+            audio.volume = 0.2; 
+            audio.play().catch((error) => {
+                console.log("Audio play failed:", error);
+            });
 
             mainContent.classList.remove('hidden');
             volumeControl.classList.add('volume-visible');
