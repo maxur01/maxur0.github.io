@@ -587,8 +587,45 @@
             type();
         }
 
+        // ROBUST COPY FUNCTION
         function copyDiscord() {
-            navigator.clipboard.writeText(config.discordId);
+            const textToCopy = config.discordId;
+            
+            // Attempt 1: Modern API
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(textToCopy)
+                    .then(showTooltip)
+                    .catch(() => fallbackCopy(textToCopy)); // Fail? Go to fallback
+            } else {
+                // Attempt 2: Fallback for older browsers or insecure contexts
+                fallbackCopy(textToCopy);
+            }
+        }
+
+        function fallbackCopy(text) {
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            
+            // Make invisible
+            textArea.style.position = "fixed";
+            textArea.style.left = "-9999px";
+            textArea.style.top = "0";
+            
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            try {
+                document.execCommand('copy');
+                showTooltip();
+            } catch (err) {
+                console.error("Copy failed", err);
+            }
+            
+            document.body.removeChild(textArea);
+        }
+
+        function showTooltip() {
             const tooltip = document.getElementById('discord-tooltip');
             tooltip.innerText = "Zkopíroval si 💕";
             tooltip.style.opacity = "1";
