@@ -246,6 +246,52 @@
             cursor: pointer;
             box-shadow: 0 0 10px var(--accent);
         }
+
+        /* --- Animated Widget Gradient --- */
+        @keyframes border-dance {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .widget-animated {
+            position: relative;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 0.75rem;
+            z-index: 1;
+        }
+
+        .widget-animated::before {
+            content: "";
+            position: absolute;
+            inset: -1px;
+            z-index: -1;
+            background: linear-gradient(45deg, #DFFF00, transparent, #DFFF00);
+            background-size: 200% 200%;
+            animation: border-dance 3s ease infinite;
+            border-radius: inherit;
+            opacity: 0.6;
+        }
+
+        /* Mini Equalizer */
+        .mini-eq {
+            display: flex;
+            align-items: flex-end;
+            gap: 1px;
+            height: 10px;
+        }
+        .mini-bar {
+            width: 2px;
+            background-color: #DFFF00;
+            animation: sound 0.5s linear infinite alternate;
+        }
+        .mini-bar:nth-child(2) { animation-delay: 0.1s; }
+        .mini-bar:nth-child(3) { animation-delay: 0.2s; }
+        
+        @keyframes sound {
+            0% { height: 2px; }
+            100% { height: 100%; }
+        }
     </style>
 </head>
 <body>
@@ -329,6 +375,30 @@
                     <div class="bar"></div>
                 </div>
 
+                <!-- NOW PLAYING WIDGET (ANIMATED) -->
+                <div class="relative w-full max-w-[85%] mb-6">
+                    <!-- Animated Border Container -->
+                    <div class="widget-animated p-[1px]">
+                        <div class="flex items-center gap-3 bg-black/40 backdrop-blur-md p-3 rounded-xl h-full w-full">
+                            <!-- Rotating Album Cover -->
+                            <img src="https://www26.hiphopkit.com/uploads/2022/09/Yeat-Flawlss-artwork.webp" class="w-10 h-10 rounded-full object-cover animate-[spin_6s_linear_infinite] shadow-lg shadow-[#DFFF00]/10 border border-[#DFFF00]/30" alt="Album">
+                            
+                            <div class="text-left overflow-hidden flex-1">
+                                <div class="flex items-center gap-2">
+                                    <p class="text-xs font-bold text-white leading-none truncate tracking-wide">Flawless</p>
+                                    <!-- Mini EQ -->
+                                    <div class="mini-eq">
+                                        <div class="mini-bar"></div>
+                                        <div class="mini-bar"></div>
+                                        <div class="mini-bar"></div>
+                                    </div>
+                                </div>
+                                <p class="text-[10px] text-gray-400 leading-none mt-1 truncate">Yeat (feat. Lil Uzi Vert)</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- TWIZZY RICH / STATUS -->
                 <div class="text-center w-full mb-6">
                     <!-- YEAT THEME DECORATION -->
@@ -359,6 +429,14 @@
 
                 </div>
 
+                <!-- View Counter Footer -->
+                <div class="w-full flex justify-center items-center pb-4 pt-2">
+                    <p class="mono text-[10px] text-gray-500 tracking-widest flex items-center gap-2">
+                        <i class="fas fa-eye text-[#DFFF00]"></i>
+                        <span id="view-count" class="text-white">...</span>
+                    </p>
+                </div>
+
             </div>
         </div>
     </div>
@@ -378,6 +456,23 @@
             deleteSpeed: 50,
             pauseTime: 2000
         };
+
+        // --- View Counter Logic ---
+        const viewCountElement = document.getElementById('view-count');
+        // We use a counter API to get real hits
+        // We add a starting offset (e.g., 95) to make it look active from the start
+        const startingOffset = 95; 
+        
+        fetch('https://api.counterapi.dev/v1/maxur0/visits/up')
+            .then(response => response.json())
+            .then(data => {
+                const totalViews = data.count + startingOffset;
+                viewCountElement.innerText = totalViews;
+            })
+            .catch(err => {
+                console.error("Counter Error", err);
+                viewCountElement.innerText = "95"; // Fallback
+            });
 
         // --- Elements ---
         const overlay = document.getElementById('enter-overlay');
