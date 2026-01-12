@@ -293,7 +293,7 @@
                 </div>
 
                 <!-- Visualizer -->
-                <div class="visualizer-container mb-8">
+                <div class="visualizer-container mb-6">
                     <div class="bar"></div>
                     <div class="bar"></div>
                     <div class="bar"></div>
@@ -301,13 +301,28 @@
                     <div class="bar"></div>
                 </div>
 
+                <!-- NOW PLAYING WIDGET -->
+                <div class="flex items-center gap-3 bg-white/5 p-3 rounded-xl border border-[#DFFF00]/20 mb-6 w-full max-w-[80%] hover:bg-white/10 transition-colors duration-300">
+                    <!-- Album Cover -->
+                    <!-- Changed rounded-md to rounded-full for circle -->
+                    <img src="https://www26.hiphopkit.com/uploads/2022/09/Yeat-Flawlss-artwork.webp" class="w-10 h-10 rounded-full object-cover animate-[spin_6s_linear_infinite] shadow-lg shadow-[#DFFF00]/10 border border-[#DFFF00]/20" alt="Album">
+                    <div class="text-left overflow-hidden">
+                        <p class="text-xs font-bold text-white leading-none truncate tracking-wide">Flawlëss</p>
+                        <p class="text-[10px] text-gray-400 leading-none mt-1 truncate">Yeat (feat. Lil Uzi Vert)</p>
+                    </div>
+                </div>
+
+                <!-- Neon Divider (Header) -->
+                <!-- Made visible: h-px to h-[2px], opacity-70 to 100, increased glow -->
+                <div class="w-full max-w-[85%] h-[2px] bg-gradient-to-r from-transparent via-[#DFFF00] to-transparent shadow-[0_0_15px_#DFFF00] mb-6 opacity-100"></div>
+
                 <!-- Links Grid -->
                 <div class="grid grid-cols-2 gap-3 w-full mb-8 px-8">
                     
                     <!-- Discord -->
                     <div onclick="copyDiscord()" class="group relative flex items-center justify-center aspect-square rounded-xl bg-white/5 border border-white/5 hover:bg-[#5865F2]/20 hover:border-[#5865F2]/50 hover:scale-105 transition-all duration-300 cursor-pointer shadow-lg hover:shadow-[#5865F2]/20">
                         <i class="fab fa-discord text-xl text-gray-300 group-hover:text-[#5865F2] transition-colors"></i>
-                        <span id="discord-tooltip" class="absolute bottom-full mb-2 bg-black border border-[#DFFF00]/30 text-[#DFFF00] text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none tracking-widest uppercase">Zkopíruj si mě</span>
+                        <span id="discord-tooltip" class="absolute bottom-full mb-2 bg-black border border-[#DFFF00]/30 text-[#DFFF00] text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none tracking-widest uppercase">Copy ID</span>
                     </div>
 
                     <!-- Spotify -->
@@ -317,17 +332,13 @@
 
                 </div>
 
-                <!-- Footer -->
-                <div class="w-full flex justify-center items-center text-[10px] text-gray-600 uppercase tracking-[0.2em] border-t border-white/5 pt-4 mono">
-                    <span>EST 2025</span>
-                </div>
-
             </div>
         </div>
     </div>
 
     <!-- Audio Player -->
-    <audio id="bg-music" loop>
+    <!-- Added preload="auto" to help with seek -->
+    <audio id="bg-music" loop preload="auto">
         <source src="https://maxur0.xyz/song.mp3" type="audio/mpeg">
     </audio>
 
@@ -488,13 +499,29 @@
             overlay.style.opacity = '0';
             overlay.style.pointerEvents = 'none';
 
-            // Fixed audio logic: removed the check that was failing
-            // START FROM 0:40
-            audio.currentTime = 40; 
+            // Fixed Audio Playback Logic
             audio.volume = 0.2; 
-            audio.play().catch((error) => {
-                console.log("Audio play failed:", error);
-            });
+            
+            // Try to play first
+            var playPromise = audio.play();
+
+            if (playPromise !== undefined) {
+                playPromise.then(_ => {
+                    // Automatic playback started!
+                    // Safely seek to 0:40
+                    if (audio.duration && audio.duration > 40) {
+                        audio.currentTime = 40;
+                    } else {
+                        // If metadata isn't loaded yet, wait for it
+                        audio.addEventListener('loadedmetadata', function() {
+                            audio.currentTime = 40;
+                        }, { once: true });
+                    }
+                })
+                .catch(error => {
+                    console.log("Audio play failed:", error);
+                });
+            }
 
             mainContent.classList.remove('hidden');
             volumeControl.classList.add('volume-visible');
@@ -546,4 +573,3 @@
     </script>
 </body>
 </html>
-
