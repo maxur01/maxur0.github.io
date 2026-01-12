@@ -328,7 +328,7 @@
     <!-- Main Content Container -->
     <div id="main-content" class="hidden min-h-screen flex items-center justify-center p-4 relative z-20 overflow-hidden" id="perspective-container">
         
-        <!-- 3D Tilt Card -->
+        <!-- 3D Tilt Card (Restored to Box Size) -->
         <div id="profile-card" class="w-full max-w-[400px] rounded-2xl p-8 opacity-0 translate-y-8 transition-all duration-1000 ease-out">
             
             <div class="flex flex-col items-center relative z-10">
@@ -457,14 +457,17 @@
             pauseTime: 2000
         };
 
-        // --- View Counter Logic ---
+        // --- View Counter Logic (AUTHENTICATED) ---
         const viewCountElement = document.getElementById('view-count');
-        // We use a counter API to get real hits
-        // We add a starting offset (e.g., 95) to make it look active from the start
         const startingOffset = 95; 
         
-        // Added cache: 'no-cache' to ensure it updates on refresh
-        fetch('https://api.counterapi.dev/v1/maxur0/visits/up', { cache: 'no-store' })
+        // Using v2 API with your credentials
+        fetch('https://api.counterapi.dev/v2/maxur01s-team-2466/first-counter-2466/up', { 
+            headers: {
+                'Authorization': 'Bearer ut_KXP97rbMNuBdQIx6sD50tlNg9elRw4qTYLVb9iwP'
+            },
+            cache: 'no-store' 
+        })
             .then(response => response.json())
             .then(data => {
                 const totalViews = data.count + startingOffset;
