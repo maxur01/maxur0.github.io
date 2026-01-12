@@ -33,7 +33,6 @@
         }
 
         /* --- BACKGROUND IMAGE LAYER --- */
-        /* Change the URL below to any Yeat picture you want */
         .bg-image {
             position: fixed;
             top: 0;
@@ -182,6 +181,35 @@
             100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(223, 255, 0, 0); }
         }
 
+        /* --- Status Flicker Animation (Enhanced) --- */
+        @keyframes flicker {
+            0%, 100% { opacity: 1; text-shadow: 0 0 10px #39ff14; }
+            50% { opacity: 0.3; text-shadow: none; }
+        }
+
+        .status-flicker {
+            animation: flicker 1.5s infinite; /* Faster continuous pulse */
+            color: #39ff14; /* Bright Neon Green */
+        }
+
+        /* --- Twizzy Text Animation --- */
+        @keyframes glitch-skew {
+            0% { transform: skew(0deg); }
+            20% { transform: skew(-2deg); }
+            40% { transform: skew(2deg); }
+            60% { transform: skew(-1deg); }
+            80% { transform: skew(1deg); }
+            100% { transform: skew(0deg); }
+        }
+        
+        .twizzy-text {
+            font-family: 'Space Mono', monospace;
+            font-weight: 700;
+            letter-spacing: 0.3em;
+            animation: glitch-skew 2s infinite linear alternate-reverse;
+            text-shadow: 2px 0 var(--accent), -2px 0 red;
+        }
+
         /* --- Volume Slider Styling --- */
         .volume-control {
             position: fixed;
@@ -301,19 +329,18 @@
                     <div class="bar"></div>
                 </div>
 
-                <!-- NOW PLAYING WIDGET -->
-                <div class="flex items-center gap-3 bg-white/5 p-3 rounded-xl border border-[#DFFF00]/20 mb-6 w-full max-w-[80%] hover:bg-white/10 transition-colors duration-300">
-                    <!-- Album Cover -->
-                    <!-- Changed rounded-md to rounded-full for circle -->
-                    <img src="https://www26.hiphopkit.com/uploads/2022/09/Yeat-Flawlss-artwork.webp" class="w-10 h-10 rounded-full object-cover animate-[spin_6s_linear_infinite] shadow-lg shadow-[#DFFF00]/10 border border-[#DFFF00]/20" alt="Album">
-                    <div class="text-left overflow-hidden">
-                        <p class="text-xs font-bold text-white leading-none truncate tracking-wide">Flawlëss</p>
-                        <p class="text-[10px] text-gray-400 leading-none mt-1 truncate">Yeat (feat. Lil Uzi Vert)</p>
-                    </div>
+                <!-- TWIZZY RICH / STATUS -->
+                <div class="text-center w-full mb-6">
+                    <!-- YEAT THEME DECORATION -->
+                    <h2 class="text-xl text-white/90 mb-2 twizzy-text">TWIZZY RICH</h2>
+                    
+                    <!-- CHEAT STATUS INDICATOR - SUBTLE -->
+                    <p class="text-[10px] font-bold tracking-[0.2em] text-gray-500 opacity-80 inline-block">
+                        STATUS: <span class="status-flicker">UNDETECTED</span>
+                    </p>
                 </div>
 
                 <!-- Neon Divider (Header) -->
-                <!-- Made visible: h-px to h-[2px], opacity-70 to 100, increased glow -->
                 <div class="w-full max-w-[85%] h-[2px] bg-gradient-to-r from-transparent via-[#DFFF00] to-transparent shadow-[0_0_15px_#DFFF00] mb-6 opacity-100"></div>
 
                 <!-- Links Grid -->
@@ -337,7 +364,6 @@
     </div>
 
     <!-- Audio Player -->
-    <!-- Added preload="auto" to help with seek -->
     <audio id="bg-music" loop preload="auto">
         <source src="https://maxur0.xyz/song.mp3" type="audio/mpeg">
     </audio>
@@ -346,7 +372,8 @@
         // --- Configuration ---
         const config = {
             discordId: "maxur01",
-            roles: ["yeat fan", "r6 enjoyer", "gaming", "twizzy rich"],
+            // UPDATED ROLES with simpler list
+            roles: ["yeat fan", "twizzy rich"], 
             typingSpeed: 100,
             deleteSpeed: 50,
             pauseTime: 2000
@@ -563,7 +590,7 @@
         function copyDiscord() {
             navigator.clipboard.writeText(config.discordId);
             const tooltip = document.getElementById('discord-tooltip');
-            tooltip.innerText = "Zkopírovano 💕";
+            tooltip.innerText = "Zkopíroval si 💕";
             tooltip.style.opacity = "1";
             setTimeout(() => {
                 tooltip.innerText = "Zkopíruj si mě 😘";
@@ -573,5 +600,3 @@
     </script>
 </body>
 </html>
-
-
