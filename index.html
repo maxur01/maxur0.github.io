@@ -463,7 +463,8 @@
         // We add a starting offset (e.g., 95) to make it look active from the start
         const startingOffset = 95; 
         
-        fetch('https://api.counterapi.dev/v1/maxur0/visits/up')
+        // Added cache: 'no-cache' to ensure it updates on refresh
+        fetch('https://api.counterapi.dev/v1/maxur0/visits/up', { cache: 'no-store' })
             .then(response => response.json())
             .then(data => {
                 const totalViews = data.count + startingOffset;
