@@ -3,7 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>maxur0 | yeat</title>
+    <title>maxur0</title>
+    
+    <!-- --- META TAGS FOR DISCORD EMBEDS --- -->
+    <meta property="og:title" content="maxur0 | yeat">
+    <meta property="og:description" content="yeat fan | twizzy rich | fivem">
+    <meta property="og:image" content="https://cdn.discordapp.com/avatars/1286234889653588042/dab7ff1602cc85346992a3de05d1dd69.png">
+    <meta property="og:url" content="https://maxur0.xyz">
+    <meta name="theme-color" content="#000000">
+    
+    <!-- FAVICON -->
+    <link rel="icon" type="image/png" href="https://cdn.discordapp.com/avatars/1286234889653588042/dab7ff1602cc85346992a3de05d1dd69.png">
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -23,28 +33,35 @@
             --bg-dark: #000000;
         }
 
+        /* CUSTOM SELECTION COLOR */
+        ::selection {
+            background: var(--accent);
+            color: black;
+        }
+
         body {
             background-color: var(--bg-dark);
             color: #ffffff;
             font-family: 'Outfit', sans-serif;
             overflow: hidden;
-            cursor: none;
+            cursor: none; /* Custom cursor everywhere */
             user-select: none;
         }
 
         /* --- BACKGROUND IMAGE LAYER --- */
         .bg-image {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
+            top: -5%;
+            left: -5%;
+            width: 110vw; /* Larger than screen for parallax movement */
+            height: 110vh;
             z-index: -20; /* Behind the stars */
             background-image: url('https://i.pinimg.com/originals/c9/c5/4b/c9c54b20745582f939775319830883b2.jpg'); 
             background-size: cover;
             background-position: center;
             opacity: 0.4; /* Low opacity so text is readable */
             filter: grayscale(100%) contrast(120%); /* Aesthetic filter */
+            transition: transform 0.1s ease-out; /* Smooth movement */
         }
 
         .mono { font-family: 'Space Mono', monospace; }
@@ -294,7 +311,7 @@
         }
     </style>
 </head>
-<body>
+<body oncontextmenu="return false;"> <!-- Disables Right Click -->
 
     <!-- Background Image Layer -->
     <div class="bg-image"></div>
@@ -328,7 +345,7 @@
     <!-- Main Content Container -->
     <div id="main-content" class="hidden min-h-screen flex items-center justify-center p-4 relative z-20 overflow-hidden" id="perspective-container">
         
-        <!-- 3D Tilt Card (Size increased to 360px and p-8 for balance) -->
+        <!-- 3D Tilt Card (Size set to 360px) -->
         <div id="profile-card" class="w-full max-w-[360px] rounded-2xl p-8 opacity-0 translate-y-8 transition-all duration-1000 ease-out">
             
             <div class="flex flex-col items-center relative z-10">
@@ -338,7 +355,7 @@
                     <!-- Glow behind PFP -->
                     <div class="absolute -inset-0.5 bg-gradient-to-br from-[#DFFF00] to-black rounded-full blur opacity-40 group-hover:opacity-80 transition duration-500"></div>
                     
-                    <!-- Image (Size increased to w-28) -->
+                    <!-- Image -->
                     <div class="relative w-28 h-28 rounded-full p-[2px] bg-black overflow-hidden border border-[#DFFF00]/20">
                         <img src="https://cdn.discordapp.com/avatars/1286234889653588042/dab7ff1602cc85346992a3de05d1dd69.png" alt="Profile" class="w-full h-full rounded-full object-cover filter brightness-100 contrast-110 hover:scale-105 transition-transform duration-500">
                     </div>
@@ -413,7 +430,7 @@
                 <div class="w-full max-w-[85%] h-[2px] bg-gradient-to-r from-transparent via-[#DFFF00] to-transparent shadow-[0_0_15px_#DFFF00] mb-6 opacity-100"></div>
 
                 <!-- Links Grid -->
-                <div class="grid grid-cols-2 gap-3 w-full px-4">
+                <div class="grid grid-cols-2 gap-3 w-full px-8">
                     
                     <!-- Discord -->
                     <div onclick="copyDiscord()" class="group relative flex items-center justify-center aspect-square rounded-xl bg-white/5 border border-white/5 hover:bg-[#5865F2]/20 hover:border-[#5865F2]/50 hover:scale-105 transition-all duration-300 cursor-pointer shadow-lg hover:shadow-[#5865F2]/20">
@@ -426,6 +443,12 @@
                         <i class="fab fa-spotify text-xl text-gray-300 group-hover:text-[#1DB954] transition-colors"></i>
                     </a>
 
+                </div>
+
+                <!-- Live Clock Footer -->
+                <div class="w-full flex justify-center items-center pb-4 pt-2">
+                    <!-- ENHANCED VISIBILITY CLOCK -->
+                    <p id="clock" class="mono text-xs font-bold text-[#DFFF00] tracking-widest drop-shadow-[0_0_5px_rgba(223,255,0,0.5)]">00:00:00</p>
                 </div>
 
             </div>
@@ -446,6 +469,43 @@
             deleteSpeed: 50,
             pauseTime: 2000
         };
+
+        // --- TITLE ANIMATION ---
+        let titleText = "maxur0 | yeat ";
+        let titleIndex = 0;
+        
+        function animateTitle() {
+            document.title = titleText.substring(titleIndex) + titleText.substring(0, titleIndex);
+            titleIndex = (titleIndex + 1) % titleText.length;
+            setTimeout(animateTitle, 300);
+        }
+        animateTitle();
+
+        // --- CLOCK LOGIC ---
+        function updateClock() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('en-US', { 
+                hour12: false, 
+                hour: '2-digit', 
+                minute: '2-digit', 
+                second: '2-digit' 
+            });
+            document.getElementById('clock').innerText = timeString;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // --- SPACEBAR TO PAUSE/PLAY ---
+        document.addEventListener('keydown', function(event) {
+            if (event.code === 'Space') {
+                event.preventDefault(); // Prevent scrolling
+                if (audio.paused) {
+                    audio.play();
+                } else {
+                    audio.pause();
+                }
+            }
+        });
 
         // --- Elements ---
         const overlay = document.getElementById('enter-overlay');
@@ -491,7 +551,9 @@
         }
 
         function drawStars() {
+            // Stars are now transparent to show BG image
             ctx.clearRect(0, 0, width, height);
+            
             const cx = width / 2;
             const cy = height / 2;
 
@@ -542,6 +604,12 @@
             cursorDot.style.left = mouseX + 'px';
             cursorDot.style.top = mouseY + 'px';
             createTrail(mouseX, mouseY);
+            
+            // PARALLAX BACKGROUND EFFECT
+            const bgImage = document.querySelector('.bg-image');
+            const xMove = (window.innerWidth - e.clientX) / 90;
+            const yMove = (window.innerHeight - e.clientY) / 90;
+            bgImage.style.transform = `translate(${xMove}px, ${yMove}px)`;
         });
 
         function animateCursor() {
@@ -701,4 +769,3 @@
     </script>
 </body>
 </html>
-
